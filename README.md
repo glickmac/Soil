@@ -6,8 +6,7 @@
 [Feature Relationship to Culture Status](#importance)    
 [Feature to Feature](#workflow)    
 [Clustering](#quickstart)    
-[Cross Validation](#install)    
-[(Exploratory) Balancing the Data](#usage)     
+[Cross Validation](#install)        
 
 ## <a name="intro"></a>Study Description
 
