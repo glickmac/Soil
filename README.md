@@ -45,24 +45,50 @@ In addition to comparing the features to the response variable, the relationship
 
 ## <a name="quickstart"></a>Clustering
 
+The tree below demostrates that the culture positive group does not cluster well together with the current features. Feature select may change this distance based clustering. 
+
+<img src="https://github.com/glickmac/Soil/blob/master/images/download-5.png" height="500" width="800">
+
+
 ## <a name="install"></a>Cross Validation
 
+To identify important features, we perform cross-validation on the dataset. The table below details the error rate as the number of features is halved. The lower the error rate the better. 
 
-#### Required arguments:
-
-| Option     | Description                                     |
+| Number of Features    | Error Rate                                  |
 |------------|-------------------------------------------------|
-| **-s**   | SRR acession number from SRA database           |
-| **-o**   | Folder to be used for pipeline output |
+| 16 | 0.231 |
+| 8  | 0.173 |
+| 4 | 0.192 |
+| 2 | 0.192 |
+| 1 | 0.269 |
 
-#### Optional arguments:
+The error rate below 0.2 suggests that some features are informative against the response variable. The optimal number of features in a reduced set would be around 8 as suggested by the performance table above. 
 
-| Option    | Description |
-|-----------|-------------|
-| **-f**    |FASTA file containing viral sequences to be used in construction of a BLAST database. If neither this argument nor -b are used, ViruSpy will default to using the Refseq viral genome database.|
-| **-b**    |BLAST database with viral sequences to be used with Magic-BLAST. If neither this argument nor -f are used, ViruSpy will default to using the Refseq viral genome database.|
-| **-d**    |Determines signature of viruses that are integrated into a host genome (runs the BUD algorithm)|
+#### Random Forest Feature Selection
 
-## <a name="usage"></a>(Exploratory) Balancing the Data
+Below is a table with the top 8 feature importance scores from a random forest enseamble algorithm. The higher the value, the more important the feature. 
+
+| Soil Category   | Gini Importance Measure                            |
+|------------|-------------------------------------------------|
+| Kaolinite | 1.76 |
+| Maghemite  | 1.69 |
+| Halloysite | 1.64 |
+| Goethite | 1.42 |
+| Magnetite | 1.31 |
+| Ilmenite  | 1.20  |
+| Gibbsite  | 1.05  |
+| Kaolin_Group  | 1.00  |
+
+
+We performed feature selection to reduce the number of features from 16 to the top 8 listed above. Then we performed a cross-validation error rate analysis as before. The results are listed in the table below. 
+
+| Number of Features    | Error Rate                                  |
+|------------|-------------------------------------------------|
+| 8  | 0.154 |
+| 4 | 0.212 |
+| 2 | 0.173 |
+| 1 | 0.250 |
+
+The performance with the reduced feature set averaged 0.197 compared with the full dataset at the same levels of 0.2065 or a 5% improvement in performance. 
 
 
