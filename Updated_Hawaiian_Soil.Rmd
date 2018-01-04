@@ -150,14 +150,26 @@ inTrain = rownames(train_data) %in% sample(rownames(train_data), floor(train.per
 train.data = train_data[inTrain,]
 test.data = train_data[!inTrain,]
 testing.data = as.matrix(test.data)
+
 ## Random Forest of training data
 rf = randomForest(training$Culture ~ ., data=train_data, mtry = 3, ntree=500, importance=TRUE)
 
 ## Feature Importance
 features = importance(rf, type = 2)
-features[order(features[,1], decreasing = TRUE),]
+features = features[order(features[,1], decreasing = TRUE),]
+features
 ```
 
+### Feature Selection
+```{r}
+top = names(features[1:8])
+
+fs_train_data = train_data[,colnames(train_data) %in% top]
+
+## Random Forest with Cross Validation
+rf_cv = rfcv(trainx = fs_train_data, trainy = Culture, cv.fold = 10)
+rf_cv$error.cv
+```
 
 
 ### Table of Culture Status
