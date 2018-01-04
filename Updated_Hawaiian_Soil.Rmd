@@ -110,7 +110,7 @@ cor.mtest <- function(mat, conf.level = 0.95){
 
 res1 <- cor.mtest(train_data,0.95)
 
-corrplot(cor_mat, p.mat = res1[[1]], sig.level=0.05, type = "lower")
+corrplot(cor_mat, p.mat = res1[[1]], sig.level=0.05, type = "lower", order = 'hclust')
 ```
 
 ### Cross Validation Error Rate
