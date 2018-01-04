@@ -38,7 +38,10 @@ Below are the plots showing the directionality of the relationship between the t
 <img src="https://github.com/glickmac/Soil/blob/master/images/download-3.png" height="400" width="550">
 
 ## <a name="workflow"></a>Feature to Feature
-  
+
+In addition to comparing the features to the response variable, the relationship between features was examined in full. The correlation plot below displays significant relationships between features. The boxes without an X indict a significant correlation between features.<font color="red"> Red bubbles </font> indicate a negative relationship, whereas <font color="blue"> blue bubbles </font> signify a positive relationship. 
+
+<img src="https://github.com/glickmac/Soil/blob/master/images/download-4.png" height="500" width="700">
 
 ## <a name="quickstart"></a>Clustering
 
