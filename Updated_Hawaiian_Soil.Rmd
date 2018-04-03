@@ -17,7 +17,7 @@ library(fscaret)
 library(EMA)
 library(ggpubr)
 
-df = read.csv('data/Updated_Feature_Table_11_2017.csv', header = T, sep = ',', stringsAsFactors = F)
+df = read.csv('data/Updated_Feature_Table_11_2017.csv', header = T, sep = '\t', stringsAsFactors = F)
 rownames(df) = df$X
 df$X = NULL
 df = as.data.frame(t(df))
@@ -27,9 +27,9 @@ testing_set = df[!(df$Culture == 'pos' | df$Culture == 'neg'),]
 
 ## Split, convert to numeric, and factorize 
 training$Culture = as.factor(as.character(training$Culture))
-train_data = as.data.frame(training[,1:16])
+train_data = as.data.frame(training[,1:17])
 train_data = as.data.frame(lapply(train_data, function(x) as.numeric(as.character(x))))
-Culture = training[,17]
+Culture = training[,18]
 df = cbind(train_data, Culture)
 ```
 
@@ -49,17 +49,35 @@ signif = subset(col_p, Culture_p_values < 0.05)
 knitr::kable(signif)
 ```
 
+
+#### pH Boxplots by Culture Status
+pH status does not reject the null hypothesis. 
+```{r, echo=FALSE}
+p = ggplot(data = df, aes(Culture, pH, color=pH)) + geom_boxplot(outlier.shape = NA) + geom_jitter(width = 0.1) + scale_colour_gradientn(colours = myPalette(2), values=seq(0, 130, length.out=130)/130)
+
+p + stat_compare_means(comparisons = list(c("pos", "neg")), method = "wilcox.test", paired = FALSE, label = "p.signif") + stat_compare_means(label.x = 2, label.y = 10)+ theme_bw() +
+  ggtitle("pH Measure by Culture Status") + theme(axis.text.y = element_text(colour="grey20",size=12,angle=0,hjust=1,vjust=0,face="plain"),
+                                                                      axis.title.y = element_text(colour="grey20",size=15,angle=90,hjust=.5,vjust=.5,face="plain"),
+                                                                      axis.text.x = element_text(colour="grey20",size=12,angle=0,hjust=0.5,vjust=0,face="plain"),
+                                                                      axis.title.x = element_text(colour="grey20",size=15,angle=0,hjust=.5,vjust=.5,face="plain"))
+```
+
+
 ### Directionality of Significant Features
 
 #### Maghemite Percentage By Culture Status
 ```{r, echo=FALSE}
+jpeg("demo.jpeg", width = 8, height = 4, units = 'in', res = 300)
+
 p = ggplot(data = df, aes(Culture, Maghemite, color=Maghemite)) + geom_boxplot(outlier.shape = NA) + geom_jitter(width = 0.1) + scale_colour_gradientn(colours = myPalette(2), values=seq(0, 130, length.out=130)/130)
 
 p + stat_compare_means(comparisons = list(c("pos", "neg")), method = "wilcox.test", paired = FALSE, label = "p.signif") + stat_compare_means(label.x = 2, label.y = 19)+ theme_bw() +
-  ggtitle("Maghemite Measure by Culture Status") + theme(axis.text.y = element_text(colour="grey20",size=12,angle=0,hjust=1,vjust=0,face="plain"),
+  ggtitle("Maghemite Measure by Culture Status") + theme(axis.text.y = element_text(colour="grey20",size=15,angle=0,hjust=1,vjust=0,face="plain"),
                                                                       axis.title.y = element_text(colour="grey20",size=15,angle=90,hjust=.5,vjust=.5,face="plain"),
-                                                                      axis.text.x = element_text(colour="grey20",size=12,angle=0,hjust=0.5,vjust=0,face="plain"),
-                                                                      axis.title.x = element_text(colour="grey20",size=15,angle=0,hjust=.5,vjust=.5,face="plain"))
+                                                                      axis.text.x = element_text(colour="grey20",size=15,angle=0,hjust=0.5,vjust=0,face="plain"),
+                                                                      axis.title.x = element_text(colour="grey20",size=17,angle=0,hjust=.5,vjust=.5,face="plain"))
+
+dev.off()
 ```
 
 #### Halloysite By Culture Status
@@ -86,7 +104,7 @@ p + stat_compare_means(comparisons = list(c("pos", "neg")), method = "wilcox.tes
 
 
 ### Correlation of Features
-
+pH is positively correlated with Kaolinite
 ```{r, echo=FALSE}
 cor_mat = cor(train_data, method = "spearman")
 
@@ -181,6 +199,7 @@ knitr::kable(test)
 
 
 ### Balance the Data
+Using SMOTE to generate randomized samples that are based on k-nearest neighbor unsupervised clustering
 ```{r, echo=FALSE}
 # SMOTE the data
 library(DMwR)
@@ -192,9 +211,9 @@ table(training2$Culture)
 ```{r, echo=FALSE}
 training2$Culture = as.factor(as.character(training2$Culture))
 
-train_data2 = as.data.frame(training2[,1:16])
+train_data2 = as.data.frame(training2[,1:17])
 train_data2 = as.data.frame(lapply(train_data2, function(x) as.numeric(as.character(x))))
-response2 = training2[,17]
+response2 = training2[,18]
 
 ## Random Forest with Cross Validation
 rf_cv = rfcv(trainx = train_data2, trainy = response2, cv.fold = 10)
@@ -203,7 +222,7 @@ rf_cv$error.cv
 ```
 
 
-
+#### Feature Importance with Balanced Data 
 ```{r, echo=FALSE}
 ## Split into Testing and Training Set
 # Define train and test sets
@@ -222,7 +241,6 @@ features[order(features[,1], decreasing = TRUE),]
 
 
 
-#### Unsupervised Clustering
 ```{r, include = FALSE}
 ### Unsupervised Clustering
 df=as.matrix(train_data)
