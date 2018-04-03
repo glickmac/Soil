@@ -22,6 +22,10 @@ A non-parametric wilcoxon-rank sum test is used to calculate the relationship be
 | Halloysite  | 0.0038 \** |
 | Kaolinite | 0.0196 \* |
 
+#### pH values by Culture Status
+
+<img src="https://github.com/glickmac/Soil/blob/master/images/download.png" height="400" width="550">
+
 Below are the plots showing the directionality of the relationship between the three significant soil characteristics. 
 
 #### Maghemite by Culture Status
@@ -88,6 +92,33 @@ We performed feature selection to reduce the number of features from 16 to the t
 | 2 | 0.173 |
 | 1 | 0.250 |
 
-The performance with the reduced feature set averaged 0.197 compared with the full dataset at the same levels of 0.2065 or a 5% improvement in performance. 
+The performance with the reduced feature set averaged 0.197 compared with the full dataset at the same levels of 0.2065 or a 5\% improvement in performance. 
+
+#### Oversampling by SMOTE
+
+The dataset suffers from a limitation of an unbalanced response variable as the number of positive cultures (10) is far below the number negative cultures (42). To counter act this, the SMOTE algorithm is applied. SMOTE simulates samples based on their relationships to the existing samples using a k nearest neighbor approach. SMOTE improves the cross-validation error rate with the values below.
+
+| Number of Features    | Error Rate                                  |
+|------------|-------------------------------------------------|
+| 16 | 0.150 |
+| 8  | 0.150 |
+| 4 | 0.225|
+| 2 | 0.300 |
+| 1 | 0.175 |
+
+The average performance with SMOTE is 0.2 or a 3.15\% improvement in performance over the default model. The features that have a Gini importance measure above one in the balanced dataset are shown below:
+
+
+| Soil Category   | Gini Importance Measure                            |
+|------------|-------------------------------------------------|
+| Maghemite  | 1.73 |
+| Halloysite | 1.70 |
+| Kaolinite | 1.65 |
+| Goethite | 1.61 |
+| Magnetite | 1.43 |
+| Ilmenite  | 1.36  |
+| Gibbsite  | 1.15  |
+
+
 
 
