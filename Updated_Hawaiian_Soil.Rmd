@@ -17,12 +17,15 @@ library(fscaret)
 library(EMA)
 library(ggpubr)
 
-df = read.csv('data/Updated_Feature_Table_11_2017.csv', header = T, sep = '\t', stringsAsFactors = F)
+df = read.csv('data/Hawiian_Soils.txt', header = T, sep = '\t', stringsAsFactors = F)
 rownames(df) = df$X
 df$X = NULL
+
+
 df = as.data.frame(t(df))
-training = df[!(is.na(df$Culture)),]
-testing_set = df[!(df$Culture == 'pos' | df$Culture == 'neg'),]
+training = df[!(is.na(df$NTM.culture)),]
+
+testing_set = df[!(df$NTM.culture == 'pos.' | df$NTM.culture == 'neg.'),]
 
 
 ## Split, convert to numeric, and factorize 
@@ -79,6 +82,21 @@ p + stat_compare_means(comparisons = list(c("pos", "neg")), method = "wilcox.tes
 
 dev.off()
 ```
+
+
+```{r}
+#jpeg("demo.jpeg", width = 8, height = 4, units = 'in', res = 300)
+
+p = ggplot(data = df, aes(Culture, Gibbsite, color=Gibbsite)) + geom_boxplot(outlier.shape = NA) + geom_jitter(width = 0.1) + scale_colour_gradientn(colours = myPalette(2), values=seq(0, 130, length.out=130)/130)
+
+p + stat_compare_means(comparisons = list(c("pos", "neg")), method = "wilcox.test", paired = FALSE, label = "p.signif") + stat_compare_means(label.x = 2, label.y = 19)+ theme_bw() +
+  ggtitle("Maghemite Measure by Culture Status") + theme(axis.text.y = element_text(colour="grey20",size=15,angle=0,hjust=1,vjust=0,face="plain"),
+                                                                      axis.title.y = element_text(colour="grey20",size=15,angle=90,hjust=.5,vjust=.5,face="plain"),
+                                                                      axis.text.x = element_text(colour="grey20",size=15,angle=0,hjust=0.5,vjust=0,face="plain"),
+                                                                      axis.title.x = element_text(colour="grey20",size=17,angle=0,hjust=.5,vjust=.5,face="plain"))
+
+```
+
 
 #### Halloysite By Culture Status
 ```{r, echo=FALSE}
